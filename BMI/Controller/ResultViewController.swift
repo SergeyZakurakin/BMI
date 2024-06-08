@@ -10,6 +10,14 @@ import UIKit
 
 class ResultViewController: UIViewController {
     
+    // MARK: - Properties
+    
+    var bmiValue: String?
+    var bmiColor: UIColor?
+    var bmiAdvice: String?
+    
+    
+    
     // MARK: - UI
         private lazy var backgroundImageView: UIImageView = {
             let element = UIImageView()
@@ -67,7 +75,7 @@ class ResultViewController: UIViewController {
     }
     
     
-    // Setup Views
+    //MARK: - Setup Views
     private func setupViews() {
         
         mainStackView = UIStackView (
@@ -85,10 +93,10 @@ class ResultViewController: UIViewController {
         view.addSubview(recalculateButton)
         
         titleLabel.text = "YOUR RESULT"
-        resultLabel.text = "19.5"
-        descriptionLabel.text = "EAT SOME MORE SNACKS!"
+        resultLabel.text = bmiValue
+        descriptionLabel.text = bmiAdvice
         
-        view.backgroundColor = .blue
+        view.backgroundColor = bmiColor
         
         recalculateButton.addTarget(self, action: #selector(recalculateButtonPressed), for: .touchUpInside)
     }

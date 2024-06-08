@@ -8,8 +8,12 @@
 import UIKit
 
 class CalculateViewController: UIViewController {
-
-// MARK: - UI
+    
+    //MARK: - Properties
+    
+    var calculatorBrain = CalculatorBrain()
+    
+    // MARK: - UI
     private lazy var backgroundImageView: UIImageView = {
         let element = UIImageView()
         
@@ -30,7 +34,7 @@ class CalculateViewController: UIViewController {
     private var weightTitleLabel = UILabel(alignment: .left)
     private var weightNumberLabel = UILabel(alignment: .right)
     private let weightSlider = UISlider(maxValue: 300)
-//
+    
     private lazy var titleLabel: UILabel = {
         let element = UILabel()
         
@@ -88,22 +92,49 @@ class CalculateViewController: UIViewController {
         heightNumberLabel.text = "1.5 m"
         
         weightTitleLabel.text = "Weight"
-        weightNumberLabel.text = "100 kg"
+        weightNumberLabel.text = "150 kg"
         
         calculateButton.addTarget(self, action: #selector(calculateButtonPressed), for: .touchUpInside)
+        
+        heightSlider.addTarget(self, action: #selector(heightSliderChanged), for: .valueChanged)
+        weightSlider.addTarget(self, action: #selector(weightSliderChanged), for: .valueChanged)
+        
+        
     }
     
     @objc private func calculateButtonPressed(_ sender: UIButton){
+        
+        let weight = weightSlider.value
+        let height = heightSlider.value
+        
+        calculatorBrain.calculateBMI(height: height, weight: weight)
+        
         let resultVC = ResultViewController()
+        resultVC.bmiValue = calculatorBrain.getBMIValue()
+        resultVC.bmiAdvice = calculatorBrain.getAdvice()
+        resultVC.bmiColor = calculatorBrain.getColor()
         
         resultVC.modalTransitionStyle = .flipHorizontal
         resultVC.modalPresentationStyle = .fullScreen
-        
         present(resultVC, animated: true)
+        
+    }
+    
+    @objc private func heightSliderChanged(_ sender: UISlider) {
+        let value = "\(String(format: "%.2f", sender.value)) m"
+        
+        heightNumberLabel.text = value
+    }
+    
+    @objc private func weightSliderChanged(_ sender: UISlider) {
+        let value = "\(String(format: "%.0f", sender.value)) kg"
+        
+        weightNumberLabel.text = value
+
+        
     }
 }
-
-// MARK: - Setup Views and Constrains
+// MARK: - Setup Constrains
 extension CalculateViewController {
     private func setupConstraints() {
         NSLayoutConstraint.activate([

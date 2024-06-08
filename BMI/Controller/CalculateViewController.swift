@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  CalculateViewController.swift
 //  BMI
 //
 //  Created by Sergey Zakurakin on 07/06/2024.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MainViewController: UIViewController {
+class CalculateViewController: UIViewController {
 
 // MARK: - UI
     private lazy var backgroundImageView: UIImageView = {
@@ -42,18 +42,7 @@ class MainViewController: UIViewController {
         return element
     }()
     
-    private lazy var calculateButton: UIButton = {
-        let element = UIButton(type: .system)
-        
-        element.tintColor = .white
-        element.backgroundColor = UIColor(red: 0.45, green: 0.45, blue: 0.82, alpha: 1)
-        element.layer.cornerRadius = 10
-        element.titleLabel?.font = .systemFont(ofSize: 20)
-        element.addTarget(self, action: #selector(calculateButtonPressed), for: .touchUpInside)
-        
-        element.translatesAutoresizingMaskIntoConstraints = false
-        return element
-    }()
+    private let calculateButton = UIButton(isBackgroundWhite: false)
     
     //MARK: - Life Cycle
     override func viewDidLoad() {
@@ -101,16 +90,21 @@ class MainViewController: UIViewController {
         weightTitleLabel.text = "Weight"
         weightNumberLabel.text = "100 kg"
         
-        calculateButton.setTitle("CALCULATE", for: .normal)
+        calculateButton.addTarget(self, action: #selector(calculateButtonPressed), for: .touchUpInside)
     }
     
     @objc private func calculateButtonPressed(_ sender: UIButton){
-        print("tap-tap")
+        let resultVC = ResultViewController()
+        
+        resultVC.modalTransitionStyle = .flipHorizontal
+        resultVC.modalPresentationStyle = .fullScreen
+        
+        present(resultVC, animated: true)
     }
 }
 
 // MARK: - Setup Views and Constrains
-extension MainViewController {
+extension CalculateViewController {
     private func setupConstraints() {
         NSLayoutConstraint.activate([
         
@@ -132,41 +126,5 @@ extension MainViewController {
             
             calculateButton.heightAnchor.constraint(equalToConstant: 51)
         ])
-    }
-}
-
-extension UIStackView {
-    convenience init(axis: NSLayoutConstraint.Axis, distribution: UIStackView.Distribution, subViews: [UIView]) {
-        self.init(arrangedSubviews: subViews)
-        
-        self.axis = axis
-        self.distribution = distribution
-        self.spacing = 0
-        self.translatesAutoresizingMaskIntoConstraints = false
-    }
-}
-
-extension UILabel {
-    convenience init(alignment: NSTextAlignment) {
-        self.init()
-        
-        self.textAlignment = alignment
-        self.font = .systemFont(ofSize: 17, weight: .light)
-        self.textColor = .darkGray
-        self.translatesAutoresizingMaskIntoConstraints = false
-        
-    }
-}
-
-extension UISlider {
-    convenience init(maxValue: Float) {
-        self.init()
-        
-        self.maximumValue = maxValue
-        self.value = maxValue / 2
-        self.thumbTintColor = UIColor(red: 0.45, green: 0.45, blue: 0.82, alpha: 0.5)
-        self.minimumTrackTintColor = UIColor(red: 0.45, green: 0.45, blue: 0.82, alpha: 0.5)
-        
-        self.translatesAutoresizingMaskIntoConstraints = false
     }
 }
